@@ -1,0 +1,72 @@
+--Task1-kvadrat tenliyi hell eden pl praqrami yaz.
+declare
+v_a number:= &enter_number_a;
+v_b number:= &enter_number_b;
+v_c number:= &enter_number_c;
+v_D number;
+begin
+v_D:=power(v_b,2)-4*v_a*v_c;
+if  v_D<0 then
+dbms_output.put_line('bu tenliyin koku yoxdur ');
+elsif v_D=0 then
+dbms_output.put_line('bu tenliyin iki beraber koku var');
+elsif v_D>0 then
+dbms_output.put_line('bu tenliyin iki muxtelif koku var');
+end if;
+end;
+/
+
+--Task2-gross maasi daxil edende net maasi versin 
+declare
+v_ishci_adi varchar2(30);
+v_sahe varchar2(15) := '&sahe';
+v_gross_salary number;
+v_gelir_vergisi number;
+v_pensiya_fondu number;
+v_ishsizlikden_sigorta_haqqi number;
+v_icbari_tibbi_sigorta_haqqi number;
+v_cemi_tutulan_mebleg number;
+v_net_salary number;
+
+begin
+v_ishci_adi := '&ishci_adi';
+v_gross_salary := &gross_salary;
+v_ishsizlikden_sigorta_haqqi := v_gross_salary * (0.5/100);
+   if v_sahe='qeyri-neft' then
+dbms_output.put_line('Neft-qaz sahesinde fealiyyeti olmayan ve qeyri-dövlet sektoruna aid edilen vergi ödeyicileri uzre');
+if v_gross_salary<=8000 then
+v_gelir_vergisi := 0;
+v_icbari_tibbi_sigorta_haqqi:=v_gross_salary*(2/100);
+elsif v_gross_salary>=8000 then
+v_gelir_vergisi := (v_gross_salary-8000)*(14/100) ;
+v_icbari_tibbi_sigorta_haqqi:=160+ (v_gross_salary-8000)*(0.5/100);
+end if;
+if v_gross_salary<=200 then
+v_pensiya_fondu := v_gross_salary *(3/100);
+else
+v_pensiya_fondu := 6+( v_gross_salary-200) *(10/100);
+end if;
+end if;
+
+   if v_sahe='neft' then
+dbms_output.put_line('Neft-qaz sahesinde fealiyyeti olan ve dövlet sektoruna aid edilen vergi ödeyicileri uzre');
+v_pensiya_fondu := v_gross_salary * 0.03;
+if v_gross_salary<200 then
+v_gelir_vergisi := 0;
+elsif v_gross_salary<2500  then
+v_gelir_vergisi:= (v_gross_salary-200)*0.14;
+elsif v_gross_salary>2500  then
+v_gelir_vergisi:=350+(v_gross_salary-2500)*0.25;
+end if;
+if v_gross_salary<=8000 then
+v_icbari_tibbi_sigorta_haqqi:=v_gross_salary* (2/100);
+else
+v_icbari_tibbi_sigorta_haqqi:=160+ (v_gross_salary-8000)* (0.5/100);
+end if;
+end if;
+
+v_cemi_tutulan_mebleg := v_gelir_vergisi+v_pensiya_fondu+v_ishsizlikden_sigorta_haqqi+v_icbari_tibbi_sigorta_haqqi;
+v_net_salary:=v_gross_salary-v_cemi_tutulan_mebleg;
+ dbms_output.put_line('Ishci:' ||v_ishci_adi);
+ dbms_output.put_line('Net salary:' ||v_net_salary);
+end;
